@@ -147,6 +147,8 @@ func registerHandlers(static fs.FS) {
 //go:embed static/index.html
 //go:embed static/app.js
 //go:embed static/style.css
+//go:embed static/agpl-3.0-standalone.html
+//go:embed static/source.tgz
 var content embed.FS
 
 func main() {

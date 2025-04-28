@@ -210,8 +210,13 @@ const initLogin = () => {
         return false
     }
 
+    const footer = document.createElement('footer')
+    footer.innerHTML = `© 2025 Cyanic –
+    <a href="/agpl-3.0-standalone.html">License</a> –
+    <a href="/source.tgz">Source</a>`
+
     document.body.innerHTML = ''
-    document.body.append(form)
+    document.body.append(form, footer)
 }
 
 initLogin()
