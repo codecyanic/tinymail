@@ -1,0 +1,142 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+input, textarea {
+    border-radius: .5rem;
+    border: 1px solid #ccc;
+    padding: .5rem .5rem;
+    outline: 0;
+}
+
+.selectable {
+    border: 1px solid #eee;
+    padding: .5rem 1rem;
+    cursor: default;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+
+    &:hover {
+        background: #eee;
+    }
+    &.selected {
+        background: #ddd;
+    }
+}
+
+.btn, input[type="submit"] {
+    cursor: default;
+    white-space: nowrap;
+    border-radius: .5rem;
+    border: 1px solid #ccc;
+    background: #eee;
+    padding: .4rem 2rem;
+    font-size: .9rem;
+
+    &:hover {
+        background: #ddd;
+    }
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+
+    width: 15rem;
+    margin: auto;
+    margin-top: 8rem;
+    background: #fff;
+    color: #333;
+    border: 1px solid #eee;
+    padding: 4rem;
+    border-radius: 1rem;
+
+    > * {
+        text-align: center;
+    }
+    > h1 {
+        font: inherit;
+        font-size: 1.2rem;
+    }
+    > input[type="submit"] {
+        margin: auto;
+    }
+}
+
+.app {
+    display: grid;
+    grid-template-columns: fit-content(15rem) 20rem 1fr;
+    grid-template-rows: min-content 1fr;
+    grid-template-areas:
+    "new       messages message"
+    "mailboxes messages message";
+    gap: 4px;
+
+    box-sizing: border-box;
+    height: 100vh;
+    width: 100vw;
+    padding: .5rem;
+    padding-bottom: 0;
+    background: #fff;
+    color: #333;
+}
+
+.mailboxes {
+    grid-area: mailboxes;
+    overflow: auto;
+    padding-bottom: 3rem;
+}
+
+.messages {
+    grid-area: messages;
+    overflow: auto;
+    width: 20rem;
+    padding-bottom: 3rem;
+}
+
+.message {
+    display: flex;
+    flex-direction: column;
+    grid-area: message;
+    padding: 0 2rem;
+
+    > * {
+        padding: .5rem;
+    }
+    min-width: 0;
+}
+.message-body {
+    flex: 1;
+    max-height: 100%;
+    overflow: auto;
+    font-family: inherit;
+    margin: 0;
+    margin-top: 1rem;
+    > * {
+        display: inline-block;
+        padding-right: 1rem;
+        padding-bottom: 1rem;
+    }
+}
+
+.load-more-btn {
+    margin-top: .5rem;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: fit-content;
+}
+
+.message-item.unread {
+    font-weight: bold;
+}
+
+.message-label {
+    color: #555;
+}
