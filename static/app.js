@@ -18,7 +18,93 @@
 
 const pageSize = 25
 
-const initApp = (data, fetchOptions) => {
+const compose = (fetchOptions, emailFrom, emailTo='', emailSubject='') => {
+    const compose = document.createElement('div')
+    compose.className = 'compose'
+
+    const overlay = document.createElement('div')
+    overlay.className = 'overlay'
+    overlay.append(compose)
+
+    overlay.onclick = e => {
+        if (e.target == overlay)
+            overlay.remove()
+    }
+
+    const send = document.createElement('div')
+    send.textContent = 'Send'
+    send.className = 'send-btn btn'
+
+    const close = document.createElement('div')
+    close.textContent = 'Close'
+    close.className = 'close-btn btn'
+    close.onclick = () => overlay.remove()
+
+    const titleBar = document.createElement('div')
+    titleBar.className = 'title-bar'
+    titleBar.append(send, close)
+
+    const fromLabel = document.createElement('span')
+    fromLabel.className = 'message-label'
+    fromLabel.textContent = 'From:'
+    const fromInput = document.createElement('input')
+    fromInput.value = emailFrom
+
+    const toLabel = document.createElement('span')
+    toLabel.className = 'message-label'
+    toLabel.textContent = 'To:'
+    const toInput = document.createElement('input')
+    toInput.value = emailTo
+
+    const subjectLabel = document.createElement('span')
+    subjectLabel.className = 'message-label'
+    subjectLabel.textContent = 'Subject:'
+    const subjectInput = document.createElement('input')
+    subjectInput.value = emailSubject
+
+    const composeHeader = document.createElement('div')
+    composeHeader.className = 'compose-header'
+    composeHeader.append(
+        fromLabel, fromInput,
+        toLabel, toInput,
+        subjectLabel, subjectInput,
+    )
+
+    const composeBody = document.createElement('textarea')
+    composeBody.className = 'compose-body'
+
+    compose.append(titleBar, composeHeader, composeBody)
+
+    send.onclick = () => {
+        if (send.locked)
+            return
+
+        const data = {
+            from: fromInput.value,
+            to: toInput.value,
+            subject: subjectInput.value,
+            body: composeBody.value,
+        }
+
+        const options = {
+            ...fetchOptions,
+            method: 'POST',
+            body: JSON.stringify(data)
+        }
+        fetch(`/api/send`, options)
+            .then(r => {
+                if (r.ok)
+                    overlay.remove()
+            })
+            .finally(() => {
+                send.locked = false
+            })
+    }
+
+    return overlay
+}
+
+const initApp = (email, data, fetchOptions) => {
     const app = document.createElement('div')
     const mailboxes = document.createElement('div')
     mailboxes.className = 'mailboxes'
@@ -29,7 +115,7 @@ const initApp = (data, fetchOptions) => {
     const newMessage = document.createElement('div')
     newMessage.className = 'new-message-btn btn'
     newMessage.textContent = 'New Message'
-    newMessage.onClick = () => {}
+    newMessage.onclick = () => app.append(compose(fetchOptions, email))
 
     const messageButton = (mailbox, msg) => {
         const btn = document.createElement('div')
@@ -206,7 +292,7 @@ const initLogin = () => {
 
         fetch('/api/account', opt)
             .then(r => r.json())
-            .then(data => initApp(data, opt))
+            .then(data => initApp(email.value, data, opt))
         return false
     }
 

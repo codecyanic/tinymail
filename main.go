@@ -30,6 +30,7 @@ import (
 	"strings"
 
 	"github.com/codecyanic/tinymail/internal/clients/imap"
+	"github.com/codecyanic/tinymail/internal/clients/smtp"
 )
 
 const defaultAddr = ":9009"
@@ -141,6 +142,49 @@ func registerHandlers(static fs.FS) {
 		}
 
 		json.NewEncoder(w).Encode(message)
+	})
+
+	http.HandleFunc("/api/send", func(w http.ResponseWriter, r *http.Request) {
+		email, password, ok := r.BasicAuth()
+		if !ok {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		if r.Method != http.MethodPost {
+			w.WriteHeader(http.StatusMethodNotAllowed)
+			return
+		}
+
+		var req struct {
+			From    string `json:"from"`
+			To      string `json:"to"`
+			Subject string `json:"subject"`
+			Body    string `json:"body"`
+			Host    string `json:"host"`
+			Port    int    `json:"port"`
+		}
+		err := json.NewDecoder(r.Body).Decode(&req)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		if req.From == "" || req.To == "" || req.Subject == "" {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		client, err := smtp.NewClient(email, password)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		err = client.Send(req.From, req.To, req.Subject, req.Body)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			log.Printf("%s: %v\n", r.URL.Path, err)
+			return
+		}
 	})
 }
 
