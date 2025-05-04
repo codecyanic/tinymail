@@ -109,6 +109,9 @@ improvements include:
 - Support for IDLE (push notifications)
 - Ability to reply to emails
 - Ability to specify allowed domains/hosts
+- Error handling on the frontend
+- Optional manual configuration
+- Keyboard navigation
 
 ## Acknowledgments
 
