@@ -6,9 +6,9 @@ PHP-based email clients.
 
 ## Features
 
-- Single binary server, under 10MB in size and memory use
+- Single binary server, under 10MB in size
 - Automatic configuration via SRV records
-- Simple web interface
+- Simple, lightweight and performant web interface, under 10MB memory usage
 - Plain text and UTF-8 email support
 - Only secure IMAP/SMTP protocols (unencrypted and STARTTLS not supported)
 - Does not store emails on the server
